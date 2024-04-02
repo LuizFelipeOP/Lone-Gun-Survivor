@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private float shootingAngle;
 
     [SerializeField]
-    public float  moveSpeed;
+    public float moveSpeed;
     public Rigidbody2D rb;
 
     private float timeBtwShots;
@@ -38,22 +38,13 @@ public class PlayerController : MonoBehaviour
     {
         shootDirection = context.ReadValue<Vector2>();
     }
+
+
     private void Update()
     {
-        float horizontal;
-        float vertical;
-        float speed;
-
         if (shootDirection != Vector2.zero)
         {
             ChangeAnimationState("Shooting");
-            
-
-            //animator.SetBool("IsShoo;ting", true);
-            horizontal = shootDirection.x;
-            vertical = shootDirection.y;
-            speed = shootDirection.sqrMagnitude;
-            isAttackPressed = true;
 
             moveSpeed = 1f;
 
@@ -63,34 +54,21 @@ public class PlayerController : MonoBehaviour
                 shootingAngle = 1.1f;
             }
 
+            animator.SetFloat("HorizontalShooting", shootDirection.x);
+            animator.SetFloat("VerticalShooting", shootDirection.y);
+            isAttackPressed = true;
 
-
-            //animator.SetFloat("Horizontal", shootDirection.x);
-            //animator.SetFloat("Vertical", shootDirection.y);
-            //animator.SetFloat("Speed", shootDirection.sqrMagnitude);
         }
         else
         {
             ChangeAnimationState("Moviment");
-            horizontal = moveDirection.x;
-            vertical = moveDirection.y;
-            speed = moveDirection.sqrMagnitude;
 
-            
             moveSpeed = 4f;
 
-
-            //animator.SetBool("IsShooting", false);
-            //animator.SetFloat("Horizontal", moveDirection.x);
-            //animator.SetFloat("Vertical", moveDirection.y);
-            //animator.SetFloat("Speed", moveDirection.sqrMagnitude);
-
+            animator.SetFloat("Horizontal", moveDirection.x);
+            animator.SetFloat("Vertical", moveDirection.y);
+            animator.SetFloat("Speed", moveDirection.sqrMagnitude);
         }
-        //animator.SetBool("IsShooting", false);
-        animator.SetFloat("Horizontal", horizontal);
-        animator.SetFloat("Vertical", vertical);
-        animator.SetFloat("Speed", speed);
-        //attackDelay = animator.GetCurrentAnimatorStateInfo(0).length;
     }
 
     private void FixedUpdate()
@@ -98,7 +76,7 @@ public class PlayerController : MonoBehaviour
         transform.Translate(moveSpeed * Time.deltaTime * moveDirection);
 
         AimShoot();
-        
+
     }
     void AimShoot()
     {
@@ -114,7 +92,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-        void Launch()
+    void Launch()
     {
         if (isAttackPressed)
         {
@@ -129,7 +107,7 @@ public class PlayerController : MonoBehaviour
                 ProjectileController projectile = projectileObject.GetComponent<ProjectileController>();
                 projectile.Launch(shootDirection, 500);
 
-                Invoke("AttackComplete", attackDelay); 
+                Invoke("AttackComplete", attackDelay);
                 //AttackComplete();
             }
         }
@@ -152,4 +130,3 @@ public class PlayerController : MonoBehaviour
         currentState = newState;
     }
 }
-

@@ -6,6 +6,8 @@ public class ProjectileController : MonoBehaviour
 {
     public Rigidbody2D rb;
 
+    [SerializeField]
+    public GameObject enemy;
     //void Start()
     //{
     //    rb = GetComponent<Rigidbody2D>();
@@ -19,7 +21,9 @@ public class ProjectileController : MonoBehaviour
         //we also add a debug log to know what the projectile touch
         Debug.Log("Projectile Collision with " + other.gameObject);
         Destroy(gameObject);
+
     }
+
     void Update()
     {
         

@@ -10,8 +10,8 @@ public class Spawner : MonoBehaviour
 	[SerializeField]
 	private float swarmerInterval = 3.5f;
 
-	[SerializeField]
 	private float numberOfEnemies = 0;
+	public Rigidbody2D rb;
 
 	void Start()
 	{
@@ -22,8 +22,8 @@ public class Spawner : MonoBehaviour
     {
 		if (numberOfEnemies < 3)
 		{
-			yield return new WaitForSeconds(interval);
-			GameObject newEnemy = Instantiate(enemy, new Vector3(Random.Range(-5f, 5), Random.Range(-6f, 6f), 0), Quaternion.identity);
+			yield return new WaitForSeconds(Random.Range(1, 5));
+			Instantiate(enemy, rb.position, Quaternion.identity);
 			numberOfEnemies++;
 			StartCoroutine(spawmEnemy(interval, enemy));
 		}

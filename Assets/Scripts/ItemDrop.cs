@@ -4,25 +4,53 @@ using UnityEngine;
 
 public class ItemDrop : MonoBehaviour
 {
+    public GameObject pickupEffect;
     public GameObject itemDrop;
+    Object[] objectsArray;
+    public Rigidbody2D rb;
+
+    public float percentDrop = 50f;
+
+    void Awake()
+    {
+        objectsArray = Resources.LoadAll("Items", typeof(Sprite));
+    }
+
     void Start()
     {
-        Debug.Log("log start item");
-    }
-    public PlayerController MyPlayer;
+        gameObject.tag = "CoffeeShot";
+        int item = Random.Range(0, objectsArray.Length);
+        this.GetComponent<SpriteRenderer>().sprite = Instantiate(objectsArray[item]) as Sprite;
 
-    // Update is called once per frame
-    void OnCollisionEnter2D(Collision2D target)
+    }
+    void OnCollisionEnter2D(Collision2D other)
     {
-        if (target.gameObject.tag.Equals("Player") == true)
+        Debug.Log("OnCollisionEnter2D");
+        if (other.transform.tag == "Player")
         {
-            Destroy(gameObject);
-            //MyPlayer.moveSpeed = 6f;
+            Pickup(other);
         }
     }
-    public void SpawmItemType()
+
+    void Pickup(Collision2D player)
     {
-        float porcent = Random.Range(1, 10);
-        //Instantiate(itemDrop, transform.position + new Vector3(0, -1, 0), Quaternion.identity);
+        //Instantiate(pickupEffect, transform.position, transform.rotation);
+
+        Debug.Log("Picked Up");
+        Destroy(gameObject);
+
+    }
+
+    public void Death()
+    {
+
+        float rand = Random.Range(0f, 2f);
+        if (rand < percentDrop)
+        {
+            //Spawn PowerUp
+            Instantiate(itemDrop, transform.position, Quaternion.identity);
+        }
+
     }
 }
+

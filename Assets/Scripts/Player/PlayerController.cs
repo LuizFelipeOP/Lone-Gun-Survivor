@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private float shootingAngle;
 
     [SerializeField]
-    public float moveSpeed;
+    public float moveSpeed = 4f;
     public Rigidbody2D rb;
 
     private float timeBtwShots;
@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     private string currentState;
     public GameObject projectilePrefab;
+    public GameObject itemDrop;
 
     private void Start()
     {
@@ -46,8 +47,6 @@ public class PlayerController : MonoBehaviour
         {
             ChangeAnimationState("Shooting");
 
-            moveSpeed = 1f;
-
             shootingAngle = 0.7f;
             if (shootDirection == Vector2.down)
             {
@@ -62,8 +61,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             ChangeAnimationState("Moviment");
-
-            moveSpeed = 4f;
 
             animator.SetFloat("Horizontal", moveDirection.x);
             animator.SetFloat("Vertical", moveDirection.y);
@@ -128,5 +125,41 @@ public class PlayerController : MonoBehaviour
         animator.Play(newState);
 
         currentState = newState;
+    }
+
+    void OnCollisionEnter2D(Collision2D target)
+    {
+        //if (other.tag == "Enemy" || other.tag == "EnemyBullet")
+        //{
+        //    // Enemy damages player
+        //    //TakeDamage(20);
+
+        //    //Spawn power up
+        //    itemDrop.GetComponent<ItemDrop>().Death();
+
+        //}
+        //if (other.tag == "Boss" || other.tag == "BossBullet")
+        //{
+        //    //TakeDamage(50);
+        //    itemDrop.GetComponent<ItemDrop>().Death();
+        //}
+
+
+         if (target.transform.tag == "CoffeeShot")
+        {
+            moveSpeed += 3;
+            Invoke("RegularSpeed", 5);
+        }
+
+        //if (other.tag == "HealthPU")
+        //{
+        //    currentHealth += 10;
+        //    healthBar.SetHealth(currentHealth);
+        //}
+    }
+    void RegularSpeed()
+    {
+
+        moveSpeed = 4f;
     }
 }

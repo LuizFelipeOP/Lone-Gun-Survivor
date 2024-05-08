@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Projectile
   - Item
+  - CoffeeShot
   layers:
   - Default
   - TransparentFX

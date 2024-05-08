@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6846488066895824640}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -187,4 +187,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deadEnemyPrefab: {fileID: 8266990863742206200, guid: e300b336a8d9af1409eb884ac460b195, type: 3}
   rb: {fileID: 3034314275690717767}
-  itemDrop: {fileID: 6693920399107239629, guid: 872ca51507ab8b2418fe6c12d7718242, type: 3}
+  itemDrop: {fileID: 3814876017660153014, guid: 60d602719481c984987a5a2468360b11, type: 3}

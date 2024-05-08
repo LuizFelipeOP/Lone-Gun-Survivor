@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
+   
 
     // Update is called once per frame
     void Update()
@@ -23,17 +20,16 @@ public class EnemyController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D target)
     {
-        if (target.gameObject.tag.Equals("Projectile") == true)
+        if (target.gameObject.tag.Equals("Projectile") )
         {
-            
+                //zombie e instaciado na tela, ao ser atingido ele dropa uim item.
+                //esse item chama o ItemDrop, controller, que gerencia qual item deve escolher, um prefab de item, fazer no update
             Instantiate(deadEnemyPrefab, rb.position, Quaternion.identity);
 
             float porcent = Random.Range(1, 10);
-            
-            //if (porcent == 5) {
-                Instantiate(itemDrop, transform.position + new Vector3(0, -1, 0), Quaternion.identity);
-                gameObject.GetComponent<ItemDrop>().SpawmItemType(); 
-            //} 
+
+            Instantiate(itemDrop, transform.position + new Vector3(0, -1, 0), Quaternion.identity);
+
 
             Destroy(gameObject);
         }

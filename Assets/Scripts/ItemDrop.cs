@@ -18,9 +18,10 @@ public class ItemDrop : MonoBehaviour
 
     void Start()
     {
-        gameObject.tag = "CoffeeShot";
         int item = Random.Range(0, objectsArray.Length);
         this.GetComponent<SpriteRenderer>().sprite = Instantiate(objectsArray[item]) as Sprite;
+        gameObject.tag = objectsArray[item].name;
+
 
     }
     void OnCollisionEnter2D(Collision2D other)

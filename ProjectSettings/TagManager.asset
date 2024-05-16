@@ -7,6 +7,9 @@ TagManager:
   - Projectile
   - Item
   - CoffeeShot
+  - Enemy
+  - Triangle
+  - HealthAppleRotten
   layers:
   - Default
   - TransparentFX

@@ -12,10 +12,15 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     public float moveSpeed = 4f;
+    public int maxHealth = 100;
+    public int currentHealth;
+    public HealthBarScript healthBar;
+
+
     public Rigidbody2D rb;
 
     private float timeBtwShots;
-    public float startTimeBtwShots = 0.6f;
+    private float startTimeBtwShots = 0.9f;
 
     public Animator animator;
     private string currentState;
@@ -24,6 +29,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
         timeBtwShots = startTimeBtwShots;
 
     }
@@ -43,28 +50,31 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (shootDirection != Vector2.zero)
+        if(currentHealth > 0)
         {
-            ChangeAnimationState("Shooting");
-
-            shootingAngle = 0.7f;
-            if (shootDirection == Vector2.down)
+            if (shootDirection != Vector2.zero)
             {
-                shootingAngle = 1.1f;
+                ChangeAnimationState("Shooting");
+
+                shootingAngle = 0.7f;
+                if (shootDirection == Vector2.down)
+                {
+                    shootingAngle = 1.1f;
+                }
+
+                animator.SetFloat("HorizontalShooting", shootDirection.x);
+                animator.SetFloat("VerticalShooting", shootDirection.y);
+                isAttackPressed = true;
+
             }
+            else
+            {
+                ChangeAnimationState("Moviment");
 
-            animator.SetFloat("HorizontalShooting", shootDirection.x);
-            animator.SetFloat("VerticalShooting", shootDirection.y);
-            isAttackPressed = true;
-
-        }
-        else
-        {
-            ChangeAnimationState("Moviment");
-
-            animator.SetFloat("Horizontal", moveDirection.x);
-            animator.SetFloat("Vertical", moveDirection.y);
-            animator.SetFloat("Speed", moveDirection.sqrMagnitude);
+                animator.SetFloat("Horizontal", moveDirection.x);
+                animator.SetFloat("Vertical", moveDirection.y);
+                animator.SetFloat("Speed", moveDirection.sqrMagnitude);
+            }
         }
     }
 
@@ -129,37 +139,63 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D target)
     {
-        //if (other.tag == "Enemy" || other.tag == "EnemyBullet")
-        //{
-        //    // Enemy damages player
-        //    //TakeDamage(20);
 
-        //    //Spawn power up
-        //    itemDrop.GetComponent<ItemDrop>().Death();
-
-        //}
-        //if (other.tag == "Boss" || other.tag == "BossBullet")
-        //{
-        //    //TakeDamage(50);
-        //    itemDrop.GetComponent<ItemDrop>().Death();
-        //}
-
-
-         if (target.transform.tag == "CoffeeShot")
+        switch (target.transform.tag)
         {
-            moveSpeed += 3;
-            Invoke("RegularSpeed", 5);
-        }
+            case "CoffeeShot":
+                moveSpeed += 3;
+                Invoke("RegularSpeed", 5);
+                break;
 
-        //if (other.tag == "HealthPU")
-        //{
-        //    currentHealth += 10;
-        //    healthBar.SetHealth(currentHealth);
-        //}
+            case "Triangle": //"SubmachineGun"
+                attackDelay = 0.1f;
+                startTimeBtwShots = .3f;
+                Invoke("RegularWeapon", 10);
+                break;
+            case "HealthAppleRotten": //sprite smaller then Item collider 
+                ModifyHealth(30);
+                break;
+            case "Enemy":
+                ModifyHealth(-20);
+                break;
+            case "Boss":
+                ModifyHealth(-50);
+                break;
+            }
+                //if (other.tag == "Enemy" || other.tag == "EnemyBullet")
+                //{
+                //    // Enemy damages player
+                //    //TakeDamage(20);
+
+                //    //Spawn power up
+                //    itemDrop.GetComponent<ItemDrop>().Death();
+
+                //}
+                //if (other.tag == "Boss" || other.tag == "BossBullet")
+                //{
+                //    //TakeDamage(50);
+                //    itemDrop.GetComponent<ItemDrop>().Death();
+                //}
+
     }
+    void ModifyHealth(int healthChange)
+    {
+        if(currentHealth > 1)
+        {
+            currentHealth += healthChange;
+            healthBar.SetHealth(currentHealth);
+        }
+    }
+    
     void RegularSpeed()
     {
 
         moveSpeed = 4f;
+        startTimeBtwShots = 0.9f;
+    }
+    void RegularWeapon()
+    {
+
+        attackDelay = 0.5f;
     }
 }

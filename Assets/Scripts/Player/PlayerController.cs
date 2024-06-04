@@ -25,15 +25,10 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     private string currentState;
     public GameObject projectilePrefab;
-    public GameObject itemDrop;
 
-    private void Start()
-    {
-        currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
-        timeBtwShots = startTimeBtwShots;
+    public GameObject inventory;
 
-    }
+    
     private float attackDelay = 0.5f;
     private bool isAttackPressed;
     private bool isAttacking;
@@ -46,12 +41,16 @@ public class PlayerController : MonoBehaviour
     {
         shootDirection = context.ReadValue<Vector2>();
     }
-
-
+    private void Start()
+    {
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
+        timeBtwShots = startTimeBtwShots;
+    }
     private void Update()
     {
-        if(currentHealth > 0)
-        {
+        //if(currentHealth > 0)
+        //{
             if (shootDirection != Vector2.zero)
             {
                 ChangeAnimationState("Shooting");
@@ -75,7 +74,13 @@ public class PlayerController : MonoBehaviour
                 animator.SetFloat("Vertical", moveDirection.y);
                 animator.SetFloat("Speed", moveDirection.sqrMagnitude);
             }
-        }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                var item = inventory.GetComponent<InventoryScript>().useItem();
+                usePowerUp(item, false);
+            }
+        //}
     }
 
     private void FixedUpdate()
@@ -139,43 +144,60 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D target)
     {
+        if(target.transform.tag != "Enemy")
+        {
+            var res = inventory.GetComponent<InventoryScript>().SaveInventory(target.transform.tag);
+            usePowerUp(target.transform.tag, res);
+        }
+        else
+        {
+            enemyDamage(target.transform.tag);
+        }
+        
+    }
 
-        switch (target.transform.tag)
+    void usePowerUp(string itemName, bool activatePowerUp)
+    {
+        switch (itemName)
         {
             case "CoffeeShot":
-                moveSpeed += 3;
-                Invoke("RegularSpeed", 5);
+                if (!activatePowerUp)
+                {
+                    moveSpeed += 3;
+                    Invoke("RegularSpeed", 5);
+                }
                 break;
 
-            case "Triangle": //"SubmachineGun"
-                attackDelay = 0.1f;
-                startTimeBtwShots = .3f;
-                Invoke("RegularWeapon", 10);
+            case "SubmachineGun":
+                if (!activatePowerUp)
+                {
+                    attackDelay = 0.1f;
+                    startTimeBtwShots = .3f;
+                    Invoke("RegularWeapon", 10);
+                }
                 break;
+
             case "HealthAppleRotten": //sprite smaller then Item collider 
-                ModifyHealth(30);
+
+                if (!activatePowerUp)
+                {
+                    ModifyHealth(30);
+                }
                 break;
+        }
+
+    }
+    void enemyDamage(string itemName)
+    {
+        switch (itemName)
+        {
             case "Enemy":
                 ModifyHealth(-20);
                 break;
             case "Boss":
                 ModifyHealth(-50);
                 break;
-            }
-                //if (other.tag == "Enemy" || other.tag == "EnemyBullet")
-                //{
-                //    // Enemy damages player
-                //    //TakeDamage(20);
-
-                //    //Spawn power up
-                //    itemDrop.GetComponent<ItemDrop>().Death();
-
-                //}
-                //if (other.tag == "Boss" || other.tag == "BossBullet")
-                //{
-                //    //TakeDamage(50);
-                //    itemDrop.GetComponent<ItemDrop>().Death();
-                //}
+        }
 
     }
     void ModifyHealth(int healthChange)
@@ -189,7 +211,6 @@ public class PlayerController : MonoBehaviour
     
     void RegularSpeed()
     {
-
         moveSpeed = 4f;
         startTimeBtwShots = 0.9f;
     }

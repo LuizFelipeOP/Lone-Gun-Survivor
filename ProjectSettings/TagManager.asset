@@ -8,8 +8,9 @@ TagManager:
   - Item
   - CoffeeShot
   - Enemy
-  - Triangle
   - HealthAppleRotten
+  - ItemHolder
+  - SubmachineGun
   layers:
   - Default
   - TransparentFX

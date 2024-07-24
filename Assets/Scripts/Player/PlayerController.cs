@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public Vector2 moveDirection;
-    public Vector2 shootDirection;
+    public float isShooting;
     private float shootingAngle;
 
     [SerializeField]
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private float startTimeBtwShots = 0.9f;
 
     public Animator animator;
+    public Animator animatorBottom;
     private string currentState;
     public GameObject projectilePrefab;
 
@@ -39,7 +40,7 @@ public class PlayerController : MonoBehaviour
     }
     public void OnShoot(InputAction.CallbackContext context)
     {
-        shootDirection = context.ReadValue<Vector2>();
+        isShooting = context.ReadValue<float>();
     }
     private void Start()
     {
@@ -47,42 +48,54 @@ public class PlayerController : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
         timeBtwShots = startTimeBtwShots;
     }
-    private void Update()
+    void Update()
     {
-        //if(currentHealth > 0)
-        //{
-            if (shootDirection != Vector2.zero)
+
+        bool buttonPressed = Gamepad.current != null ? Gamepad.current.aButton.wasPressedThisFrame : false;
+        bool spaceKeyPressed = Keyboard.current != null ? Keyboard.current.zKey.wasPressedThisFrame : false;
+
+        if (isShooting > 0)
+        {
+            ChangeAnimationState("Shooting");
+
+            shootingAngle = 0.7f;
+            if (moveDirection == Vector2.down)
             {
-                ChangeAnimationState("Shooting");
-
-                shootingAngle = 0.7f;
-                if (shootDirection == Vector2.down)
-                {
-                    shootingAngle = 1.1f;
-                }
-
-                animator.SetFloat("HorizontalShooting", shootDirection.x);
-                animator.SetFloat("VerticalShooting", shootDirection.y);
-                isAttackPressed = true;
-
-            }
-            else
-            {
-                ChangeAnimationState("Moviment");
-
-                animator.SetFloat("Horizontal", moveDirection.x);
-                animator.SetFloat("Vertical", moveDirection.y);
-                animator.SetFloat("Speed", moveDirection.sqrMagnitude);
+                shootingAngle = 1.1f;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            changeAnimationTop("HorizontalShooting", "VerticalShooting", "Speed", moveDirection);
+            changeAnimationBottom("Horizontal", "Vertical", "Speed", moveDirection);
+
+            isAttackPressed = true;
+
+        }
+        else
+        {
+            ChangeAnimationState("Moviment");
+
+            changeAnimationTop("Horizontal", "Vertical", "Speed", moveDirection);
+            changeAnimationBottom("Horizontal", "Vertical", "Speed", moveDirection);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
             {
                 var item = inventory.GetComponent<InventoryScript>().useItem();
                 usePowerUp(item, false);
             }
-        //}
     }
-
+    private void changeAnimationTop(string Horizontal, string Vertical, string Speed, Vector2 moveDirection)
+    {
+        animator.SetFloat(Horizontal, moveDirection.x);
+        animator.SetFloat(Vertical, moveDirection.y);
+        animator.SetFloat(Speed, moveDirection.sqrMagnitude);
+    }
+    private void changeAnimationBottom(string Horizontal, string Vertical, string Speed, Vector2 moveDirection)
+    {
+        animatorBottom.SetFloat(Horizontal, moveDirection.x);
+        animatorBottom.SetFloat(Vertical, moveDirection.y);
+        animatorBottom.SetFloat(Speed, moveDirection.sqrMagnitude);
+    }
     private void FixedUpdate()
     {
         transform.Translate(moveSpeed * Time.deltaTime * moveDirection);
@@ -93,7 +106,7 @@ public class PlayerController : MonoBehaviour
     void AimShoot()
     {
 
-        if (shootDirection != Vector2.zero && timeBtwShots < 0)
+        if (moveDirection != Vector2.zero && timeBtwShots < 0)
         {
             Launch();
         }
@@ -114,10 +127,10 @@ public class PlayerController : MonoBehaviour
             {
                 isAttacking = true;
 
-                GameObject projectileObject = Instantiate(projectilePrefab, rb.position + (shootDirection * shootingAngle), Quaternion.identity);
+                GameObject projectileObject = Instantiate(projectilePrefab, rb.position + (moveDirection * shootingAngle), Quaternion.identity);
 
                 ProjectileController projectile = projectileObject.GetComponent<ProjectileController>();
-                projectile.Launch(shootDirection, 500);
+                projectile.Launch(moveDirection, 500);
 
                 Invoke("AttackComplete", attackDelay);
                 //AttackComplete();

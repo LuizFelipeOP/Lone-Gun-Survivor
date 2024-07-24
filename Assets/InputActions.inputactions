@@ -15,10 +15,10 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Shooting",
-                    "type": "Value",
+                    "name": "fireAction",
+                    "type": "Button",
                     "id": "8879fb9c-a77e-47ab-b4e1-bc82416ee0f5",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -26,7 +26,7 @@
             ],
             "bindings": [
                 {
-                    "name": "WASD",
+                    "name": "Arrows",
                     "id": "859a7d46-4f9c-40f0-8217-15c9d4cf4a74",
                     "path": "2DVector",
                     "interactions": "",
@@ -39,7 +39,7 @@
                 {
                     "name": "up",
                     "id": "2c2697ac-26a5-49f8-b9a3-42d7fb27105e",
-                    "path": "<Keyboard>/w",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -50,7 +50,7 @@
                 {
                     "name": "down",
                     "id": "dadb040e-04e9-4ec5-8630-113d989595a3",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -61,7 +61,7 @@
                 {
                     "name": "left",
                     "id": "0322511e-6c22-4a04-82d1-3f80e9c75faa",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -72,7 +72,7 @@
                 {
                     "name": "right",
                     "id": "11c91aa6-0b7f-4aac-bf16-a2c00d88cc78",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -81,59 +81,26 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Arrows",
-                    "id": "d470fd4a-bcc8-4d40-beaf-e0554c54b86f",
-                    "path": "2DVector",
+                    "name": "",
+                    "id": "4368d567-414f-4baa-8f46-9a38804ceb1e",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Shooting",
-                    "isComposite": true,
+                    "action": "fireAction",
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "cdcddebf-89e5-47b4-9c8b-ed2f34fc7f34",
-                    "path": "<Keyboard>/upArrow",
+                    "name": "",
+                    "id": "7f3c829b-356c-4ea0-b967-0133b96f08ec",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Shooting",
+                    "action": "fireAction",
                     "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "bd7a8904-3e54-4a35-ba23-651be1f2f305",
-                    "path": "<Keyboard>/downArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Shooting",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "697b54ca-f1d6-4061-861b-2891d73b1ce1",
-                    "path": "<Keyboard>/leftArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Shooting",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "141f0329-567d-4fe3-a47c-519e4ad0767a",
-                    "path": "<Keyboard>/rightArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Shooting",
-                    "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         }

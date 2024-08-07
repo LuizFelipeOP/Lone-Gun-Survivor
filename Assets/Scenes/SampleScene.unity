@@ -862,6 +862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveDirection: {x: 0, y: 0}
+  isShooting: 0
   moveSpeed: 4
   maxHealth: 100
   currentHealth: 0
@@ -871,31 +872,6 @@ MonoBehaviour:
   animatorBottom: {fileID: 1402200180}
   projectilePrefab: {fileID: 670321092949085142, guid: fbbbcc346f4290345882e95b52bc8796, type: 3}
   inventory: {fileID: 374054740}
-  fireAction:
-    m_Name: Fire
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 877acfb5-0cf0-4bb0-8aeb-c8420f3f69ad
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings:
-    - m_Name: 
-      m_Id: b2f3927f-e25e-4024-9cb8-dc65f1713b9e
-      m_Path: <Keyboard>/#(Z)
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Fire
-      m_Flags: 0
-    - m_Name: 
-      m_Id: 97be0265-9561-46d3-8f9a-a84851f7062c
-      m_Path: <Gamepad>/buttonSouth
-      m_Interactions: 
-      m_Processors: 
-      m_Groups: 
-      m_Action: Fire
-      m_Flags: 0
-    m_Flags: 0
 --- !u!212 &678748801
 SpriteRenderer:
   m_ObjectHideFlags: 0

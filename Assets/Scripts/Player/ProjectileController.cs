@@ -19,8 +19,11 @@ public class ProjectileController : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other)
     {
         //we also add a debug log to know what the projectile touch
-        Debug.Log("Projectile Collision with " + other.gameObject);
-        Destroy(gameObject);
+        if(other.gameObject.tag != "Player")
+        {
+            Debug.Log("Projectile Collision with " + other.gameObject);
+            Destroy(gameObject);
+        }
 
     }
 

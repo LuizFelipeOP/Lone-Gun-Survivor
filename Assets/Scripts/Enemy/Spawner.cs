@@ -15,7 +15,7 @@ public class Spawner : MonoBehaviour
 
 	void Start()
 	{
-		StartCoroutine(spawmEnemy(swarmerInterval, swarmerPrefab)); 
+		//StartCoroutine(spawmEnemy(swarmerInterval, swarmerPrefab)); 
     
 	}
 	private IEnumerator spawmEnemy(float interval, GameObject enemy)

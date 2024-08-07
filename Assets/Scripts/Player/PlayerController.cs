@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public Vector2 moveDirection;
+    public Vector2 moveDirectionTemp;
     public float isShooting;
     private float shootingAngle;
 
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rb;
 
     private float timeBtwShots;
-    private float startTimeBtwShots = 0.9f;
+    //private float startTimeBtwShots = 0.9f;
 
     public Animator animator;
     public Animator animatorBottom;
@@ -30,7 +31,7 @@ public class PlayerController : MonoBehaviour
     public GameObject inventory;
 
     
-    private float attackDelay = 0.5f;
+    private float attackDelay = 0.3f;
     private bool isAttackPressed;
     private bool isAttacking;
 
@@ -46,14 +47,23 @@ public class PlayerController : MonoBehaviour
     {
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
-        timeBtwShots = startTimeBtwShots;
+        //timeBtwShots = startTimeBtwShots;
     }
     void Update()
     {
+        // faazer temp para sprit IDLE
+        if (moveDirection != Vector2.zero)
+        {
+            moveDirectionTemp = moveDirection;
+        }
+        //rodar IDLE
+        if (moveDirection == Vector2.zero)
+        {
+            changeAnimationTop("HorizontalDLE", "VerticalDLE", "Speed", moveDirectionTemp);
+            changeAnimationBottom("HorizontalDLE", "VerticalDLE", "Speed", moveDirectionTemp);
+        }
 
-        bool buttonPressed = Gamepad.current != null ? Gamepad.current.aButton.wasPressedThisFrame : false;
-        bool spaceKeyPressed = Keyboard.current != null ? Keyboard.current.zKey.wasPressedThisFrame : false;
-
+        //movimento de atirar
         if (isShooting > 0)
         {
             ChangeAnimationState("Shooting");
@@ -61,10 +71,19 @@ public class PlayerController : MonoBehaviour
             shootingAngle = 0.7f;
             if (moveDirection == Vector2.down)
             {
-                shootingAngle = 1.1f;
+                shootingAngle = 1.5f;
             }
+            //decidir a diração do tipo, IDLE ou andando
+            if (moveDirection == Vector2.zero)
+            {
+                changeAnimationTop("HorizontalShooting", "VerticalShooting", "Speed", moveDirectionTemp);
 
-            changeAnimationTop("HorizontalShooting", "VerticalShooting", "Speed", moveDirection);
+            }
+            else
+            {
+                changeAnimationTop("HorizontalShooting", "VerticalShooting", "Speed", moveDirection);
+            }
+            //movimentção pernas atirando
             changeAnimationBottom("Horizontal", "Vertical", "Speed", moveDirection);
 
             isAttackPressed = true;
@@ -72,17 +91,19 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            //andando 
             ChangeAnimationState("Moviment");
 
             changeAnimationTop("Horizontal", "Vertical", "Speed", moveDirection);
             changeAnimationBottom("Horizontal", "Vertical", "Speed", moveDirection);
         }
 
+        
         if (Input.GetKeyDown(KeyCode.Space))
-            {
-                var item = inventory.GetComponent<InventoryScript>().useItem();
-                usePowerUp(item, false);
-            }
+        {
+            var item = inventory.GetComponent<InventoryScript>().useItem();
+            usePowerUp(item, false);
+        }
     }
     private void changeAnimationTop(string Horizontal, string Vertical, string Speed, Vector2 moveDirection)
     {
@@ -100,13 +121,7 @@ public class PlayerController : MonoBehaviour
     {
         transform.Translate(moveSpeed * Time.deltaTime * moveDirection);
 
-        AimShoot();
-
-    }
-    void AimShoot()
-    {
-
-        if (moveDirection != Vector2.zero && timeBtwShots < 0)
+        if (timeBtwShots < 0)
         {
             Launch();
         }
@@ -115,6 +130,7 @@ public class PlayerController : MonoBehaviour
         {
             timeBtwShots -= Time.deltaTime;
         }
+
     }
 
     void Launch()
@@ -126,11 +142,12 @@ public class PlayerController : MonoBehaviour
             if (!isAttacking)
             {
                 isAttacking = true;
-
-                GameObject projectileObject = Instantiate(projectilePrefab, rb.position + (moveDirection * shootingAngle), Quaternion.identity);
+                Vector2 direction = moveDirection != Vector2.zero ? moveDirection : moveDirectionTemp;
+                
+                GameObject projectileObject = Instantiate(projectilePrefab, rb.position + (direction * shootingAngle), Quaternion.identity);
 
                 ProjectileController projectile = projectileObject.GetComponent<ProjectileController>();
-                projectile.Launch(moveDirection, 500);
+                projectile.Launch(direction, 500);
 
                 Invoke("AttackComplete", attackDelay);
                 //AttackComplete();
@@ -141,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
     void AttackComplete()
     {
-        timeBtwShots = startTimeBtwShots;
+        //timeBtwShots = startTimeBtwShots;
         isAttacking = false;
     }
 
@@ -185,7 +202,7 @@ public class PlayerController : MonoBehaviour
                 if (!activatePowerUp)
                 {
                     attackDelay = 0.1f;
-                    startTimeBtwShots = .3f;
+                    //startTimeBtwShots = .3f;
                     Invoke("RegularWeapon", 10);
                 }
                 break;
@@ -225,11 +242,10 @@ public class PlayerController : MonoBehaviour
     void RegularSpeed()
     {
         moveSpeed = 4f;
-        startTimeBtwShots = 0.9f;
+        //startTimeBtwShots = 0.9f;
     }
     void RegularWeapon()
     {
-
-        attackDelay = 0.5f;
+        attackDelay = 0.3f;
     }
 }
